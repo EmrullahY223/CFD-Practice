@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def Upwind(nx,nt):
+def Upwind(nx,nt): # accurate for sigma <= 1 
 
     # define variables
     dx = 2/(nx-1)
