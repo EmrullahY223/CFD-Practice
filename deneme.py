@@ -1,8 +1,5 @@
 import numpy as np
 
-data = np.array([[1, 2], [3, 4], [5, 6]])
+c = np.linspace(0,40,41)
 
-print(data)
-
-print(data[1:,1:])
-print(data[1:,:-1])
+print(c[1:-1])
