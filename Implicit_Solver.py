@@ -39,7 +39,7 @@ def Beam_WarmingTA(nx,dt,dx,u,nt):
 			
 			u[i] = d_star[i] - c_star[i] * un[i+1]
 
-		print(u)
+		#print(u)
 		u[0] = 1
 	"""
 	
