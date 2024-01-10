@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def Beam_WarmingTA(nx,dt,dx,u,nt):
+def Beam_WarmingTA(nx,dt,dx,u,nt,damping,c_coeff):
 
 	# Initialization of arrays
 
@@ -18,52 +18,36 @@ def Beam_WarmingTA(nx,dt,dx,u,nt):
 	for n in range(nt):
 		
 		un[:] = u[:]
-
+		
 		a[0] = -(dt/(4*dx)) * un[0]
 		a[1:] = -(dt/(4*dx)) * un[0:-1]
-
+		
 		c[:-1] = (dt/(4*dx)) * un[1:]
-
+		
 		c_star[0] = c[0]/b[0]
-		c_star[1:-1] = c[1:-1]/(b[1:-1] - a[1:-1]*c_star[0:-2])
-
-		d[:] = un[:]
-		d[0] = d[0] - a[0]*un[0]
-
-		d_star[0] = d[0]/b[0]
-		d_star[1:] = (d[1:] - a[1:]*d_star[0:-1])/(b[1:] - a[1:]*c_star[0:-1])
-
-		u[nx-1] = d_star[nx-1]
-
-		for i in range(nx-2, -1, -1):
-			
-			u[i] = d_star[i] - c_star[i] * un[i+1]
-
-		#print(u)
-		u[0] = 1
-	"""
-	
-	for n in range(nt):
-		un[:] = u[:]
-
-		a[0] = -(dt/(4*dx)) * un[0]
-
-		for i in range(1,nx):
-			a[i] = -dt/(4*dx)*un[i-1]
-		for i in range(nx-1):
-			c[i] = dt/(dx*4)*un[i+1]
-		for i in range(nx):
-			d[i] = un[i]
-
-		d[0] = d[0] - a[0]*un[0]
-		c_star[0] = c[0]/b[0]
-		d_star[0] = d[0]/b[0]
-
 		for i in range(1,nx-1):
-			c_star[i] = c[i]/(b[i] - c_star[i-1]*a[i])
+			c_star[i] = c[i]/(b[i] - (a[i]*c_star[i-1]))
+		
+		# Introduce damping if needed
+			
+		if(damping):
+			d[0] = un[0]
+			d[1] = un[1]
 
+			d[2:-2] = un[2:-2] + Damping(c_coeff, un)
+
+			d[nx-2] = un[nx-2]
+			d[nx-1] = un[nx-1]
+
+		else:
+			d[:] = un[:]
+		
+		d[0] = d[0] - a[0]*un[0]
+		# *********************************
+		print(f'd: {d}')	
+		d_star[0] = d[0]/b[0]
 		for i in range(1,nx):
-			d_star[i] = (d[i] - d_star[i-1]*a[i])/(b[i] - c_star[i-1]*a[i])
+			d_star[i] = (d[i] - a[i]*d_star[i-1])/(b[i] - a[i]*c_star[i-1])
 		
 		u[nx-1] = d_star[nx-1]
 
@@ -71,10 +55,11 @@ def Beam_WarmingTA(nx,dt,dx,u,nt):
 			
 			u[i] = d_star[i] - c_star[i] * un[i+1]
 
-		print(u)
+		#print(f"u = {u}")
 		u[0] = 1
-	"""
+	
 	return u
+
 
 def Damping(c_coeff, un):
 	
@@ -88,32 +73,35 @@ if __name__ == '__main__':
 	T = 0.4  
 	nx = 41
 	sigma = 1.0
-	c_coeff = 0.0
 	dx = domain/(nx-1)
 	dt = sigma*dx
 	nt = int(T/dt)
+	c_coeff = 0.125
 	print(f'dx: {dx} , dt: {dt}')
 
 	#IC's and BC's
 
-	u = np.zeros(nx)
+	u_1 = np.zeros(nx)
+	u_2 = np.zeros(nx)
 	x = np.linspace(0,domain,nx)
 
 	for i in range(nx):
 
 		if x[i] <= 2:
 
-			u[i] = 1
+			u_1[i] = 1
+
 
 		else:
 
-			u[i] = 0
+			u_1[i] = 0
 
 	# Solution Iterations
+	
+	u1 = Beam_WarmingTA(nx,dt,dx,u_1,nt,True,c_coeff)
 	#print(u)
-
-	u = Beam_WarmingTA(nx,dt,dx,u,nt)
-
-	#print(u)
-	plt.plot(x,u)
+	plt.plot(x,u1,label = 'u1')
+	plt.xlabel('x(m)')
+	plt.ylabel('u(m/s)')
+	plt.legend()
 	plt.show()
