@@ -60,6 +60,76 @@ def Beam_WarmingTA(nx,dt,dx,u,nt,damping,c_coeff):
 	
 	return u
 
+def Richymyer(dt,dx,u,nt):
+	# Flux fucn
+
+    F = lambda u: 0.5*(u**2)
+    
+    # Solution Iterations
+    for n in range(nt):
+
+        uh = u.copy()
+
+        uh[1:-1] = 0.5 * (u[2:] + u[0:-2]) - dt/(4*dx) * (F(u[2:]) - F(u[0:-2]))
+        #print(uh)
+
+        u[1:-1] = u[1:-1] - dt/(dx*2) * (F(uh[2:]) - F(uh[0:-2]))
+	
+
+def Lax_Friedrichs(dt,dx,u,nt):
+
+	# Flux fucn
+
+    F = lambda u: 0.5*(u**2)
+    
+    # Solution Iterations
+    
+    for n in range(nt):
+        
+        unh_p = u.copy()
+        unh_n = u.copy()
+        
+        unh_p[1:-1] = 0.5*(u[1:-1] + u[2:]) - dt/(dx*2)*(F(u[2:]) - F(u[1:-1]))
+        unh_n[1:-1] = 0.5*(u[1:-1] + u[0:-2]) - dt/(dx*2)*(F(u[1:-1]) - F(u[0:-2]))
+        
+        u[1:-1] = u[1:-1] - dt/dx*(F(unh_p[1:-1]) - F(unh_n[1:-1]))
+    
+	return u
+
+def MacCormack(dt,dx,u,nt):
+
+	# Flux fucn
+
+    F = lambda u: 0.5*(u**2)
+    
+    # Solution Iterations
+    
+    for n in range(nt):
+        
+        us = u.copy()
+        
+        us[1:-1] = u[1:-1] - dt/dx*(F(u[2:]) - F(u[1:-1]))
+        
+        u[1:-1] = 0.5* ((u[1:-1] + us[1:-1]) - dt/dx*(F(us[1:-1]) - F(us[0:-2])))
+
+	return u
+
+def Lax_Wendroff(dt,dx,u,nt):
+
+	# Flux fucn
+
+    F = lambda u: 0.5*(u**2)
+    
+    # Solution Iterations
+
+	for n in range(nt):
+
+		un = u.copy()
+
+		u[1:-1] = un[1:-1] - dt/(2*dx)*(F(un[2:] - F(u[0:-2]))) + ...
+		(dt**2)/(4*dx**2)*((un[2:]+un[1:-1])*(F(un[2:])-F(un[1:-2])) - (un[1:-1] + un[0:-2])*(F(un[1:-1])-F(un[0:-2])))
+
+	return u
 
 def Damping(c_coeff, un):
 	
@@ -83,6 +153,10 @@ if __name__ == '__main__':
 
 	u_1 = np.zeros(nx)
 	u_2 = np.zeros(nx)
+	u_3 = np.zeros(nx)
+	u_4 = np.zeros(nx)
+	u_5 = np.zeros(nx)
+	u_6 = np.zeros(nx)
 	x = np.linspace(0,domain,nx)
 
 	for i in range(nx):
@@ -90,17 +164,35 @@ if __name__ == '__main__':
 		if x[i] <= 2:
 
 			u_1[i] = 1
-
-
+			u_2[i] = 1
+			u_3[i] = 1
+			u_4[i] = 1
+			u_5[i] = 1
+			u_6[i] = 1
 		else:
 
 			u_1[i] = 0
+			u_2[i] = 0
+			u_3[i] = 0
+			u_4[i] = 0
+			u_5[i] = 0
+			u_6[i] = 0
 
 	# Solution Iterations
 	
-	u1 = Beam_WarmingTA(nx,dt,dx,u_1,nt,True,c_coeff)
+	u1 = Beam_WarmingTA(nx,dt,dx,u_1,nt,False,0)
+	u2 = Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.25)
+	u3 = Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.5)
+	u4 = Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.75)
+	u5 = Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.1)
+	u6 = Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.125)
 	#print(u)
 	plt.plot(x,u1,label = 'u1')
+	plt.plot(x,u2,label = 'u2')
+	plt.plot(x,u3,label = 'u3')
+	plt.plot(x,u4,label = 'u4')
+	plt.plot(x,u5,label = 'u5')
+	plt.plot(x,u6,label = 'u6')
 	plt.xlabel('x(m)')
 	plt.ylabel('u(m/s)')
 	plt.legend()
