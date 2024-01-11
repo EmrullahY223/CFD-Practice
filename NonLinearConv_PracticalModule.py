@@ -45,20 +45,28 @@ if __name__ == '__main__':
 
 	# Solution Iterations
 	
-	u1 = solver.Beam_WarmingTA(nx,dt,dx,u_1,nt,False,0)
-	u2 = solver.Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.25)
-	u3 = solver.Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.5)
-	u4 = solver.Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.75)
-	u5 = solver.Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.1)
-	u6 = solver.Beam_WarmingTA(nx,dt,dx,u_1,nt,True,0.125)
+	u1 = solver.Beam_WarmingTA(nx,dt,dx,u_1,nt,True,c_coeff)
+	"""
+	u2 = solver.Beam_WarmingTA(nx,dt,dx,u_2,nt,True,0.025)
+	u3 = solver.Beam_WarmingTA(nx,dt,dx,u_3,nt,True,0.05)
+	u4 = solver.Beam_WarmingTA(nx,dt,dx,u_4,nt,True,0.075)
+	u5 = solver.Beam_WarmingTA(nx,dt,dx,u_5,nt,True,0.1)
+	u6 = solver.Beam_WarmingTA(nx,dt,dx,u_6,nt,True,0.125)
+	"""
+	
 	#print(u)
 	plt.plot(x,u1,label = 'u1')
+	"""
 	plt.plot(x,u2,label = 'u2')
 	plt.plot(x,u3,label = 'u3')
 	plt.plot(x,u4,label = 'u4')
 	plt.plot(x,u5,label = 'u5')
 	plt.plot(x,u6,label = 'u6')
+	"""
 	plt.xlabel('x(m)')
 	plt.ylabel('u(m/s)')
+	plt.ylim(-0.3,1.7)
+	plt.xlim(1,3)
+	plt.title(f'Comparison with dx:{dx} , dt:{dt} with e = {c_coeff}')
 	plt.legend()
 	plt.show()
