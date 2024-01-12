@@ -42,8 +42,6 @@ def Beam_WarmingTA(nx,dt,dx,u,nt,damping,c_coeff):
 			d[:] = un[:]
 		
 		d[0] = d[0] - a[0]*un[0]
-		# *********************************
-		print(f'd: {d}')	
 		d_star[0] = d[0]/b[0]
 		for i in range(1,nx):
 			d_star[i] = (d[i] - a[i]*d_star[i-1])/(b[i] - a[i]*c_star[i-1])
@@ -114,7 +112,6 @@ def MacCormack(dt,dx,u,nt):
 
     return u
 
-
 def Lax_Wendroff(dt,dx,u,nt):
 
 	# Flux fucn
@@ -126,8 +123,8 @@ def Lax_Wendroff(dt,dx,u,nt):
 
         un = u.copy()
 
-        u[1:-1] = un[1:-1] - dt/(2*dx)*(F(un[2:] - F(u[0:-2]))) + (dt**2)/(4*dx**2)*((un[2:]+un[1:-1])*(F(un[2:])-F(un[1:-2])) - (un[1:-1] + un[0:-2])*(F(un[1:-1])-F(un[0:-2])))
-
+        u[1:-1] = un[1:-1] - dt/(2*dx)*(F(un[2:]) - F(u[0:-2])) + (dt**2)/(4*dx**2)*((un[2:]+un[1:-1])*(F(un[2:])-F(un[1:-1])) - (un[1:-1] + un[0:-2])*(F(un[1:-1])-F(un[0:-2])))
+        print(u)
     return u
 
 def Damping(c_coeff, un):

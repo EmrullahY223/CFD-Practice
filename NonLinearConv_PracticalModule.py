@@ -5,13 +5,13 @@ import Non_LinearSolvers as solver
 if __name__ == '__main__':
 
 	domain = 4.0
-	T = 0.4  
+	T = 2.0  
 	nx = 41
-	sigma = 1.0
+	sigma = 1
 	dx = domain/(nx-1)
 	dt = sigma*dx
 	nt = int(T/dt)
-	c_coeff = 0.125
+	c_coeff = 0.1
 	print(f'dx: {dx} , dt: {dt}')
 
 	#IC's and BC's
@@ -46,27 +46,21 @@ if __name__ == '__main__':
 	# Solution Iterations
 	
 	u1 = solver.Beam_WarmingTA(nx,dt,dx,u_1,nt,True,c_coeff)
-	"""
-	u2 = solver.Beam_WarmingTA(nx,dt,dx,u_2,nt,True,0.025)
-	u3 = solver.Beam_WarmingTA(nx,dt,dx,u_3,nt,True,0.05)
-	u4 = solver.Beam_WarmingTA(nx,dt,dx,u_4,nt,True,0.075)
-	u5 = solver.Beam_WarmingTA(nx,dt,dx,u_5,nt,True,0.1)
-	u6 = solver.Beam_WarmingTA(nx,dt,dx,u_6,nt,True,0.125)
-	"""
+	u2 = solver.Richymyer(dt,dx,u_2,nt)
+	u3 = solver.Lax_Friedrichs(dt,dx,u_3,nt)
+	u4 = solver.MacCormack(dt,dx,u_4,nt)
+	u5 = solver.Lax_Wendroff(dt,dx,u_5,nt)
 	
-	#print(u)
-	plt.plot(x,u1,label = 'u1')
-	"""
-	plt.plot(x,u2,label = 'u2')
-	plt.plot(x,u3,label = 'u3')
-	plt.plot(x,u4,label = 'u4')
-	plt.plot(x,u5,label = 'u5')
-	plt.plot(x,u6,label = 'u6')
-	"""
+	plt.plot(x,u1,label = 'Beam&Warming')
+	plt.plot(x,u2,label = 'Richymyer')
+	plt.plot(x,u3,label = 'Lax_Friedrichs')
+	plt.plot(x,u4,label = 'MacCormack')
+	plt.plot(x,u5,label = 'Lax_Wendroff')
+
 	plt.xlabel('x(m)')
 	plt.ylabel('u(m/s)')
-	plt.ylim(-0.3,1.7)
-	plt.xlim(1,3)
-	plt.title(f'Comparison with dx:{dx} , dt:{dt} with e = {c_coeff}')
+	plt.ylim(None,1.7)
+	plt.xlim(1,3.5)
+	plt.title(f'Comparison with dx:{dx:.3f} , dt:{dt:.3f} with e = {c_coeff} and sigma: {sigma}')
 	plt.legend()
 	plt.show()
