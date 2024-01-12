@@ -134,4 +134,4 @@ if __name__ == '__main__':
     Upwind(31,100)
     #Lax_Friedrichs(100,90)
     #Lax_Wendroff(200,10000)
-    print('hi')
+    print('hi')z

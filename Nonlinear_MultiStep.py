@@ -208,8 +208,6 @@ def Lax_Friedrichs_MultiStep(sigma1,nx,xmax,tmax,step):
     
     # Solution Iterations
     
-    # Solution Iteration for Sigma 1
-    
     for n in range(nt1 - 1):
         
         unh_p = u1.copy()
