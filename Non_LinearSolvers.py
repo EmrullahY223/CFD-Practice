@@ -124,7 +124,7 @@ def Lax_Wendroff(dt,dx,u,nt):
         un = u.copy()
 
         u[1:-1] = un[1:-1] - dt/(2*dx)*(F(un[2:]) - F(u[0:-2])) + (dt**2)/(4*dx**2)*((un[2:]+un[1:-1])*(F(un[2:])-F(un[1:-1])) - (un[1:-1] + un[0:-2])*(F(un[1:-1])-F(un[0:-2])))
-        print(u)
+        #print(u)
     return u
 
 def Damping(c_coeff, un):
