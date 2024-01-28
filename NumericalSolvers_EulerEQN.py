@@ -27,7 +27,7 @@ def RichtMyer(q,dt,dx,Tfin,gamma):
     t = 0.0
     q = q
     while t < Tfin:
-        qn = q.copy
+        qn = q.copy()
         # Create Flux Vector
 
         F = Flux_Vec(qn,gamma)
