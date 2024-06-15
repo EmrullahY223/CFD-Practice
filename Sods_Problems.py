@@ -85,6 +85,8 @@ print(f'SpeedOfSound = \n{SpeedOfSound}')
 print('##############################################')
 print(f'MachNumber = \n{MachNumber}')
 
+# Plot The Results
+
 fig, axs = plt.subplots(2,3)
 axs[0,0].plot(x,Pressure)
 axs[0,0].set_title('Pressure')
